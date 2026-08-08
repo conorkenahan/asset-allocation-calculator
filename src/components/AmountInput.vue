@@ -15,7 +15,7 @@ function handleInput(event) {
 </script>
 
 <template>
-  <label for="amount">Amount: </label>
+  <label for="amount">Investable assets (USD)</label>
   <input
     id="amount"
     :value="amount"
@@ -27,3 +27,34 @@ function handleInput(event) {
   />
   <p v-if="error" id="amount-error">{{ error }}</p>
 </template>
+
+<style scoped>
+label {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--color-ink-soft);
+  font-size: 0.875rem;
+}
+
+input {
+  display: block;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+}
+
+input[aria-invalid='true'] {
+  border-color: var(--color-error);
+}
+
+#amount-error {
+  margin: var(--space-2) 0 0;
+  color: var(--color-error);
+  font-size: 0.875rem;
+}
+</style>

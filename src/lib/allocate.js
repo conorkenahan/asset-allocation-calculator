@@ -9,7 +9,7 @@ export function allocate(usdAmount, rate, percent) {
 
 export function parseAmount(input) {
   const cleaned = String(input).replace(/[$,\s]/g, '')
-  if (cleaned === '') return null
+  if (cleaned === '' || cleaned === '.') return null
   return Number(cleaned)
 }
 

@@ -11,6 +11,7 @@
   --font-sans: 'Archivo', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
+  --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
@@ -19,6 +20,8 @@
 
   --radius: 8px;
   --focus-ring: 0 0 0 3px rgba(29, 78, 216, 0.35);
+
+  --transition: 160ms ease;
 }
 
 *,
