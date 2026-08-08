@@ -8,11 +8,10 @@ import { useExchangeRates } from './composables/useExchangeRates.js'
 const { rates, status, fetchedAt, refresh } = useExchangeRates()
 
 const amount = ref('')
-const touched = ref(false)
 const allocation = ref([...DEFAULT_ALLOCATION])
 
 const error = computed(() => validateAmount(amount.value))
-const showError = computed(() => touched.value && error.value !== null)
+const showError = computed(() => error.value !== null)
 
 const results = computed(() => {
   const value = parseAmount(amount.value)
@@ -27,23 +26,29 @@ const results = computed(() => {
     return { ...asset, percent, usd, crypto }
   })
 })
-watchEffect(() => {
-  console.log('results:', error.value)
-})
+function handleInput(event) {
+  const sanitized = event.target.value.replace(/[^0-9.,$]/g, '')
+  amount.value = sanitized
+
+  // If we stripped something, the DOM still shows the raw text,
+  // so push the clean version back into the field
+  if (sanitized !== event.target.value) {
+    event.target.value = sanitized
+  }
+}
 </script>
 
 <template>
-  <h1>Converter</h1>
+  <h1>Asset Allocation Calculator</h1>
   <label for="amount">Amount</label>
   <input
     id="amount"
+    :value="amount"
+    @input="handleInput"
     :aria-describedby="showError ? 'amount-error' : undefined"
     :aria-invalid="showError ? 'true' : 'false'"
-    v-model="amount"
     type="text"
     inputmode="decimal"
-    @blur="touched = true"
-    @input="touched = false"
   />
   <p v-if="showError" id="amount-error">{{ error }}</p>
   <div v-for="result in results" :key="result.symbol" class="result">
