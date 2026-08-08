@@ -15,7 +15,7 @@ function handleInput(event) {
 </script>
 
 <template>
-  <label for="amount">Amount</label>
+  <label for="amount">Amount: </label>
   <input
     id="amount"
     :value="amount"

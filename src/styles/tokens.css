@@ -1,0 +1,42 @@
+:root {
+  --color-ink: #101828;
+  --color-ink-soft: #475467;
+  --color-ground: #fafbfc;
+  --color-surface: #ffffff;
+  --color-line: #e4e7ec;
+  --color-blue: #1d4ed8;
+  --color-blue-wash: #eff4ff;
+  --color-error: #b42318;
+
+  --font-sans: 'Archivo', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  --radius: 8px;
+  --focus-ring: 0 0 0 3px rgba(29, 78, 216, 0.35);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
