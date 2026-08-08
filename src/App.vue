@@ -1,5 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
+import AmountInput from './components/AmountInput.vue'
+import AllocationResult from './components/AllocationResult.vue'
 import { ASSETS, DEFAULT_ALLOCATION } from './config/assets.js'
 import { allocate, parseAmount, validateAmount } from './lib/allocate.js'
 import { formatCrypto, formatUsd, formatTime } from './lib/format.js'
@@ -26,16 +28,6 @@ const results = computed(() => {
     return { ...asset, percent, usd, crypto }
   })
 })
-function handleInput(event) {
-  const sanitized = event.target.value.replace(/[^0-9.,$]/g, '')
-  amount.value = sanitized
-
-  // If we stripped something, the DOM still shows the raw text,
-  // so push the clean version back into the field
-  if (sanitized !== event.target.value) {
-    event.target.value = sanitized
-  }
-}
 
 function reverse() {
   const [a, b] = allocation.value
@@ -48,17 +40,7 @@ function reverse() {
 
 <template>
   <h1>Asset Allocation Calculator</h1>
-  <label for="amount">Amount</label>
-  <input
-    id="amount"
-    :value="amount"
-    @input="handleInput"
-    :aria-describedby="showError ? 'amount-error' : undefined"
-    :aria-invalid="showError ? 'true' : 'false'"
-    type="text"
-    inputmode="decimal"
-  />
-  <p v-if="showError" id="amount-error">{{ error }}</p>
+  <AmountInput v-model="amount" :error="error" />
 
   <div aria-live="polite">
     <p v-if="status === 'loading'">Loading rates…</p>
@@ -70,11 +52,7 @@ function reverse() {
 
     <div v-else>
       <template v-if="results.length">
-        <div v-for="result in results" :key="result.symbol" class="result">
-          <h2>{{ result.percent }}% {{ result.symbol }} allocation</h2>
-          <p class="result__amount">{{ formatCrypto(result.crypto, result.decimals) }}</p>
-          <p class="result__usd">{{ formatUsd(result.usd) }}</p>
-        </div>
+        <AllocationResult v-for="result in results" :key="result.symbol" :result="result" />
         <button @click="reverse">Reverse split</button>
         <p>Rates as of {{ formatTime(fetchedAt) }}</p>
         <button @click="refresh">Refresh rates</button>
