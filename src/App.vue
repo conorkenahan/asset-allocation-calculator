@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watchEffect } from 'vue'
+import { ref, computed } from 'vue'
 import { ASSETS, DEFAULT_ALLOCATION } from './config/assets.js'
 import { allocate, parseAmount, validateAmount } from './lib/allocate.js'
 import { formatCrypto, formatUsd, formatTime } from './lib/format.js'
@@ -36,6 +36,14 @@ function handleInput(event) {
     event.target.value = sanitized
   }
 }
+
+function reverse() {
+  const [a, b] = allocation.value
+  allocation.value = [
+    { ...a, percent: b.percent },
+    { ...b, percent: a.percent },
+  ]
+}
 </script>
 
 <template>
@@ -51,9 +59,27 @@ function handleInput(event) {
     inputmode="decimal"
   />
   <p v-if="showError" id="amount-error">{{ error }}</p>
-  <div v-for="result in results" :key="result.symbol" class="result">
-    <h2>{{ result.percent }}% {{ result.symbol }} allocation</h2>
-    <p class="result__amount">{{ formatCrypto(result.crypto, result.decimals) }}</p>
-    <p class="result__usd">{{ formatUsd(result.usd) }}</p>
+
+  <div aria-live="polite">
+    <p v-if="status === 'loading'">Loading rates…</p>
+
+    <div v-else-if="status === 'error'">
+      <p>Couldn't load exchange rates.</p>
+      <button @click="refresh">Try again</button>
+    </div>
+
+    <div v-else>
+      <template v-if="results.length">
+        <div v-for="result in results" :key="result.symbol" class="result">
+          <h2>{{ result.percent }}% {{ result.symbol }} allocation</h2>
+          <p class="result__amount">{{ formatCrypto(result.crypto, result.decimals) }}</p>
+          <p class="result__usd">{{ formatUsd(result.usd) }}</p>
+        </div>
+        <button @click="reverse">Reverse split</button>
+        <p>Rates as of {{ formatTime(fetchedAt) }}</p>
+        <button @click="refresh">Refresh rates</button>
+      </template>
+      <p v-else>Enter an amount to see your allocation.</p>
+    </div>
   </div>
 </template>
