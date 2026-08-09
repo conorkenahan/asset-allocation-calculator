@@ -7,8 +7,7 @@ exchange rates. Built for the Justworks front end take-home.
 
 ## Running it
 
-Requires Node 22.18+ or 24.12+ (see `.nvmrc` and the `engines` field in
-`package.json`).
+Requires Node 24 (see `.nvmrc`); run `nvm use`, then `npm install` runs clean.
 
 ```
 npm install
