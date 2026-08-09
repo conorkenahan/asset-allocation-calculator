@@ -9,7 +9,7 @@ defineProps({
 <template>
   <h2>{{ result.percent }}% {{ result.symbol }} allocation</h2>
   <p class="result__amount" :data-symbol="result.symbol">
-    {{ formatCrypto(result.crypto, result.decimals) }}
+    {{ formatCrypto(result.crypto, result.maxDecimals) }}
   </p>
   <p class="result__usd">{{ formatUsd(result.usd) }}</p>
 </template>

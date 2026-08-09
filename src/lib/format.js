@@ -1,6 +1,9 @@
 const LOCALE = 'en-US'
 
-export function formatCrypto(value, decimals) {
+export function formatCrypto(value, maxDecimals) {
+  const abs = Math.abs(value)
+  const integerDigits = abs < 1 ? 0 : Math.trunc(abs).toString().length
+  const decimals = Math.max(2, maxDecimals - integerDigits)
   return new Intl.NumberFormat(LOCALE, {
     minimumFractionDigits: 2,
     maximumFractionDigits: decimals,
