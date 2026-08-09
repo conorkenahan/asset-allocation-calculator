@@ -1,3 +1,5 @@
+<img width="1014" height="553" alt="Screenshot 2026-08-09 at 10 50 11 AM" src="https://github.com/user-attachments/assets/e9dccd84-5790-464b-983c-1b5b1944b4af" />
+
 # Asset Allocation Calculator
 
 Takes a USD amount and calculates a 70/30 BTC/ETH split using live Coinbase
