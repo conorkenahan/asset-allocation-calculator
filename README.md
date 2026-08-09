@@ -56,6 +56,9 @@ for what counts as valid; the input component just displays the result.
   immediately.
 - **A failed fetch is visible.** Plain message plus a retry button, no
   masking. Retry and refresh call the same function.
+- **Crypto precision scales with size.** Decimals shrink as the number
+  grows (floored at 2) and cap at 8 per asset, enough for BTC down to the
+  satoshi and a sensible ceiling for display.
 
 ## Accessibility
 

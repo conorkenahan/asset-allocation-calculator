@@ -1,6 +1,6 @@
 export const ASSETS = {
   BTC: { symbol: 'BTC', name: 'Bitcoin', maxDecimals: 8 },
-  ETH: { symbol: 'ETH', name: 'Ethereum', maxDecimals: 6 },
+  ETH: { symbol: 'ETH', name: 'Ethereum', maxDecimals: 8 },
 }
 
 export const DEFAULT_ALLOCATION = [
