@@ -1,7 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
-import AmountInput from './components/AmountInput.vue'
 import AllocationResult from './components/AllocationResult.vue'
+import AllocationSlider from './components/AllocationSlider.vue'
+import AmountInput from './components/AmountInput.vue'
 import { ASSETS, DEFAULT_ALLOCATION } from './config/assets.js'
 import { allocate, parseAmount, validateAmount } from './lib/allocate.js'
 import { formatTime } from './lib/format.js'
@@ -62,22 +63,7 @@ function reverse() {
         <div v-else>
           <template v-if="results.length">
             <AllocationResult v-for="result in results" :key="result.symbol" :result="result" />
-            <div class="allocation-slider">
-              <div class="allocation-slider__labels">
-                <span>{{ allocation[0].symbol }} {{ allocation[0].percent }}%</span>
-                <span>{{ allocation[1].symbol }} {{ allocation[1].percent }}%</span>
-              </div>
-              <input
-                v-model.number="btcPercent"
-                class="allocation-slider__input"
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-                :aria-valuetext="`${allocation[0].symbol} ${allocation[0].percent} percent, ${allocation[1].symbol} ${allocation[1].percent} percent`"
-                aria-label="Allocation split between BTC and ETH"
-              />
-            </div>
+            <AllocationSlider v-model="btcPercent" :assets="allocation" />
             <button class="btn btn--ghost results-action" @click="reverse">
               <svg
                 viewBox="0 0 24 24"
@@ -165,25 +151,6 @@ h1 {
 
 .status-block {
   text-align: center;
-}
-
-.allocation-slider {
-  margin-top: var(--space-6);
-}
-
-.allocation-slider__labels {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: var(--space-2);
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-ink-soft);
-}
-
-.allocation-slider__input {
-  width: 100%;
-  accent-color: var(--color-blue);
 }
 
 .results-action {
