@@ -1,10 +1,20 @@
 import { MAX_AMOUNT } from '../config/assets.js'
 
-export function allocate(usdAmount, rate, percent) {
-  const usd = usdAmount * (percent / 100)
-  const crypto = usd * rate
+export function splitUsd(usdAmount, percents) {
+  const totalCents = Math.round(usdAmount * 100)
+  let assigned = 0
 
-  return { usd, crypto }
+  return percents.map((percent, i) => {
+    const isLast = i === percents.length - 1
+    const cents = isLast ? totalCents - assigned : Math.round((totalCents * percent) / 100)
+
+    assigned += cents
+    return cents / 100
+  })
+}
+
+export function allocate(usd, rate) {
+  return usd * rate
 }
 
 export function parseAmount(input) {

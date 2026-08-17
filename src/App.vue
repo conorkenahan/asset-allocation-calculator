@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import AmountInput from './components/AmountInput.vue'
 import AllocationResult from './components/AllocationResult.vue'
 import { ASSETS, DEFAULT_ALLOCATION } from './config/assets.js'
-import { allocate, parseAmount, validateAmount } from './lib/allocate.js'
+import { splitUsd, allocate, parseAmount, validateAmount } from './lib/allocate.js'
 import { formatTime } from './lib/format.js'
 import { useExchangeRates } from './composables/useExchangeRates.js'
 
@@ -17,15 +17,21 @@ const error = computed(() => validateAmount(amount.value))
 const results = computed(() => {
   const value = parseAmount(amount.value)
 
-  if (status.value !== 'ready') return []
+  if (!fetchedAt.value) return []
   if (value === null || Number.isNaN(value)) return []
   if (error.value) return []
 
-  return allocation.value.map(({ symbol, percent }) => {
-    const asset = ASSETS[symbol]
-    const { usd, crypto } = allocate(value, rates.value[symbol], percent)
-    return { ...asset, percent, usd, crypto }
-  })
+  const usdSlices = splitUsd(
+    value,
+    allocation.value.map((a) => a.percent),
+  )
+
+  return allocation.value.map(({ symbol, percent }, i) => ({
+    ...ASSETS[symbol],
+    percent,
+    usd: usdSlices[i],
+    crypto: allocate(usdSlices[i], rates.value[symbol]),
+  }))
 })
 
 function reverse() {
@@ -45,9 +51,7 @@ function reverse() {
         <AmountInput v-model="amount" :error="error" />
       </section>
       <section class="panel panel--results" aria-live="polite">
-        <p v-if="status === 'loading'" class="status-text status-text--center">Loading rates…</p>
-
-        <div v-else-if="status === 'error'" class="status-block">
+        <div v-if="status === 'error'" class="status-block">
           <p class="status-text">Couldn't load exchange rates.</p>
           <button class="btn btn--primary" @click="refresh">Try again</button>
         </div>
@@ -75,11 +79,19 @@ function reverse() {
               Reverse split
             </button>
             <div class="results-footer">
-              <p class="status-text">Rates as of {{ formatTime(fetchedAt) }}</p>
+              <p class="status-text">
+                {{
+                  status === 'loading'
+                    ? 'Refreshing rates...'
+                    : `Rates as of ${formatTime(fetchedAt)}`
+                }}
+              </p>
               <button class="btn btn--ghost" @click="refresh">Refresh rates</button>
             </div>
           </template>
-          <p v-else class="status-text status-text--center">Enter an amount to see your allocation.</p>
+          <p v-else class="status-text status-text--center">
+            Enter an amount to see your allocation.
+          </p>
         </div>
       </section>
     </main>
